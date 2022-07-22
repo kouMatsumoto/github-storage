@@ -9,7 +9,10 @@
     "npm": ">= 8.6.0"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "format": "prettier --ignore-path .gitignore --write . && eslint --fix --ext ts,tsx ./src",
+    "lint": "prettier --ignore-path .gitignore --check . && eslint --ext ts,tsx ./src",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -23,6 +26,79 @@
   },
   "homepage": "https://github.com/kouMatsumoto/github-storage#readme",
   "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
+    "@types/node": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.3.0",
+    "eslint-plugin-import": "^2.26.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
     "typescript": "^4.7.4"
+  },
+  "prettier": {
+    "printWidth": 140,
+    "trailingComma": "all"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "import"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:import/typescript",
+      "prettier"
+    ],
+    "settings": {
+      "import/parsers": {
+        "@typescript-eslint/parser": [
+          ".ts",
+          ".tsx"
+        ]
+      },
+      "import/resolver": {
+        "typescript": {
+          "alwaysTryTypes": true
+        }
+      }
+    },
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "off",
+      "import/order": [
+        "error",
+        {
+          "alphabetize": {
+            "order": "asc"
+          },
+          "groups": [
+            "builtin",
+            "external",
+            "parent",
+            "sibling",
+            "index"
+          ]
+        }
+      ]
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,html,css,scss,json,yml,yaml,md}": [
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix --cache"
+    ]
   }
 }
