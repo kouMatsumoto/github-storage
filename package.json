@@ -1,0 +1,28 @@
+{
+  "name": "github-storage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">= 18.0.0",
+    "npm": ">= 8.6.0"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kouMatsumoto/github-storage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kouMatsumoto/github-storage/issues"
+  },
+  "homepage": "https://github.com/kouMatsumoto/github-storage#readme",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
