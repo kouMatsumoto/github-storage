@@ -1,1 +1,3 @@
-console.log("hello github-storage");
+export const main = () => {
+  console.log("hello github-storage");
+};
