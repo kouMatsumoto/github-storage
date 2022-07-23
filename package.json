@@ -39,6 +39,9 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/@koumatsumoto"
   },
+  "dependencies": {
+    "@octokit/graphql": "^5.0.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
