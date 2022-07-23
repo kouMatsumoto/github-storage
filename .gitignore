@@ -105,3 +105,7 @@ dist
 
 # IntelliJ IDE
 /.idea/
+
+# build files
+/dist/
+/types/
