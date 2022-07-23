@@ -1,5 +1,5 @@
 {
-  "name": "github-storage",
+  "name": "@koumatsumoto/github-storage",
   "version": "1.0.0",
   "description": "",
   "engines": {
@@ -30,12 +30,15 @@
     "url": "git+https://github.com/kouMatsumoto/github-storage.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kou Matsumoto",
   "license": "ISC",
+  "homepage": "https://github.com/kouMatsumoto/github-storage#readme",
   "bugs": {
     "url": "https://github.com/kouMatsumoto/github-storage/issues"
   },
-  "homepage": "https://github.com/kouMatsumoto/github-storage#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@koumatsumoto"
+  },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
