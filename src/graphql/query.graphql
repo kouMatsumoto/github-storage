@@ -1,0 +1,53 @@
+query GetUserInformation($repositoryName: String!) {
+    viewer {
+        login
+        name
+        repository(name: $repositoryName) {
+            nameWithOwner
+            defaultBranchRef {
+                name
+                target {
+                    ... on Commit {
+                        history(first: 30) {
+                            nodes {
+                                message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+query GetRepositoryLastCommitId($owner: String!, $name: String!) {
+    repository(owner: $owner, name: $name) {
+        defaultBranchRef {
+            name
+            target {
+                ... on Commit {
+                    oid
+                }
+            }
+        }
+    }
+}
+
+query GetFileContent($owner: String!, $name: String!, $expression: String!) {
+    repository(owner: $owner, name: $name) {
+        object(expression: $expression) {
+            ... on Blob {
+                byteSize
+                text
+            }
+        }
+    }
+}
+
+mutation CreateCommit($input: CreateCommitOnBranchInput!) {
+    createCommitOnBranch(input: $input) {
+        commit {
+            oid
+        }
+    }
+}

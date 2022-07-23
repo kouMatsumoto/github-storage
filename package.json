@@ -23,7 +23,8 @@
     "format": "rome format --write --indent-style space --line-width 120 ./src && rome check --apply ./src",
     "lint": "npm run format && git diff --exit-code --quiet",
     "test": "vitest run",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "repository": {
     "type": "git",
@@ -40,11 +41,20 @@
     "registry": "https://npm.pkg.github.com/@koumatsumoto"
   },
   "dependencies": {
-    "@octokit/graphql": "^5.0.0"
+    "graphql": "^16.5.0",
+    "graphql-request": "^4.3.0",
+    "graphql-tag": "^2.12.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.3",
+    "@graphql-codegen/cli": "2.9.1",
+    "@graphql-codegen/introspection": "2.2.0",
+    "@graphql-codegen/typescript": "2.7.2",
+    "@graphql-codegen/typescript-document-nodes": "2.3.2",
+    "@graphql-codegen/typescript-graphql-files-modules": "2.2.0",
+    "@graphql-codegen/typescript-graphql-request": "^4.5.2",
+    "@graphql-codegen/typescript-operations": "2.5.2",
     "@types/node": "^18.0.6",
     "dotenv": "^16.0.1",
     "husky": "^8.0.1",
