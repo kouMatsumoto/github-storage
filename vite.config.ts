@@ -1,4 +1,5 @@
-import { resolve } from "path";
+/// <reference types="vitest" />
+import { resolve } from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -8,5 +9,9 @@ export default defineConfig({
       name: "GithubStorage",
       fileName: "github-storage",
     },
+  },
+  test: {
+    includeSource: ["src/**/*.{js,ts}"],
+    setupFiles: ["src/testing/setup-vitest.ts"],
   },
 });
