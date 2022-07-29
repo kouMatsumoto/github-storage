@@ -19,7 +19,7 @@
     "/types"
   ],
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "npm run codegen && tsc && vite build",
     "format": "rome format --write --indent-style space --line-width 120 ./src && rome check --apply ./src",
     "lint": "npm run format && git diff --exit-code --quiet",
     "test": "vitest run",
@@ -43,7 +43,8 @@
   "dependencies": {
     "graphql": "^16.5.0",
     "graphql-request": "^4.3.0",
-    "graphql-tag": "^2.12.6"
+    "graphql-tag": "^2.12.6",
+    "zod": "^3.17.10"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",

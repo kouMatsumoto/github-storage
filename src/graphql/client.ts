@@ -15444,8 +15444,6 @@ export type ProjectV2Item =
     creator?: Maybe<Actor>;
     /** Identifies the primary key from the database. */
     databaseId?: Maybe<Scalars["Int"]>;
-    /** A specific field value given a field name */
-    fieldValueByName?: Maybe<ProjectV2ItemFieldValue>;
     /** List of field values */
     fieldValues: ProjectV2ItemFieldValueConnection;
     id: Scalars["ID"];
@@ -15458,11 +15456,6 @@ export type ProjectV2Item =
     /** Identifies the date and time when the object was last updated. */
     updatedAt: Scalars["DateTime"];
   };
-
-/** An item within a Project. */
-export type ProjectV2ItemFieldValueByNameArgs = {
-  name: Scalars["String"];
-};
 
 /** An item within a Project. */
 export type ProjectV2ItemFieldValuesArgs = {
@@ -17289,6 +17282,43 @@ export type PullRequestTemplate = {
   filename?: Maybe<Scalars["String"]>;
   /** The repository the template belongs to */
   repository: Repository;
+};
+
+/** A threaded list of comments for a given pull request. */
+export type PullRequestThread =
+  & Node
+  & {
+    __typename?: "PullRequestThread";
+    /** A list of pull request comments associated with the thread. */
+    comments: PullRequestReviewCommentConnection;
+    id: Scalars["ID"];
+    /** Whether or not the thread has been collapsed (resolved) */
+    isCollapsed: Scalars["Boolean"];
+    /** Indicates whether this thread was outdated by newer changes. */
+    isOutdated: Scalars["Boolean"];
+    /** Whether this thread has been resolved */
+    isResolved: Scalars["Boolean"];
+    /** Identifies the pull request associated with this thread. */
+    pullRequest: PullRequest;
+    /** Identifies the repository associated with this thread. */
+    repository: Repository;
+    /** The user who resolved this thread */
+    resolvedBy?: Maybe<User>;
+    /** Indicates whether the current viewer can reply to this thread. */
+    viewerCanReply: Scalars["Boolean"];
+    /** Whether or not the viewer can resolve this thread */
+    viewerCanResolve: Scalars["Boolean"];
+    /** Whether or not the viewer can unresolve this thread */
+    viewerCanUnresolve: Scalars["Boolean"];
+  };
+
+/** A threaded list of comments for a given pull request. */
+export type PullRequestThreadCommentsArgs = {
+  after?: InputMaybe<Scalars["String"]>;
+  before?: InputMaybe<Scalars["String"]>;
+  first?: InputMaybe<Scalars["Int"]>;
+  last?: InputMaybe<Scalars["Int"]>;
+  skip?: InputMaybe<Scalars["Int"]>;
 };
 
 /** The connection type for PullRequestTimelineItem. */
@@ -26807,53 +26837,21 @@ export type WorkflowRunPendingDeploymentRequestsArgs = {
   last?: InputMaybe<Scalars["Int"]>;
 };
 
-export type GetUserInformationQueryVariables = Exact<
-  {
-    repositoryName: Scalars["String"];
-  }
->;
+export type GetViewerQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetUserInformationQuery = {
+export type GetViewerQuery = {
   __typename?: "Query";
-  viewer: {
-    __typename?: "User";
-    login: string;
-    name?: string | null;
-    repository?:
-      | {
-        __typename?: "Repository";
-        nameWithOwner: string;
-        defaultBranchRef?:
-          | {
-            __typename?: "Ref";
-            name: string;
-            target?:
-              | { __typename?: "Blob" }
-              | {
-                __typename?: "Commit";
-                history: {
-                  __typename?: "CommitHistoryConnection";
-                  nodes?: Array<{ __typename?: "Commit"; message: string } | null> | null;
-                };
-              }
-              | { __typename?: "Tag" }
-              | { __typename?: "Tree" }
-              | null;
-          }
-          | null;
-      }
-      | null;
-  };
+  viewer: { __typename?: "User"; login: string; name?: string | null };
 };
 
-export type GetRepositoryLastCommitIdQueryVariables = Exact<
+export type GetRepositoryQueryVariables = Exact<
   {
     owner: Scalars["String"];
     name: Scalars["String"];
   }
 >;
 
-export type GetRepositoryLastCommitIdQuery = {
+export type GetRepositoryQuery = {
   __typename?: "Query";
   repository?:
     | {
@@ -26910,31 +26908,16 @@ export type CreateCommitMutation = {
     | null;
 };
 
-export const GetUserInformationDocument = gql`
-    query GetUserInformation($repositoryName: String!) {
+export const GetViewerDocument = gql`
+    query GetViewer {
   viewer {
     login
     name
-    repository(name: $repositoryName) {
-      nameWithOwner
-      defaultBranchRef {
-        name
-        target {
-          ... on Commit {
-            history(first: 30) {
-              nodes {
-                message
-              }
-            }
-          }
-        }
-      }
-    }
   }
 }
     `;
-export const GetRepositoryLastCommitIdDocument = gql`
-    query GetRepositoryLastCommitId($owner: String!, $name: String!) {
+export const GetRepositoryDocument = gql`
+    query GetRepository($owner: String!, $name: String!) {
   repository(owner: $owner, name: $name) {
     defaultBranchRef {
       name
@@ -26979,31 +26962,28 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetUserInformation(
-      variables: GetUserInformationQueryVariables,
+    GetViewer(
+      variables?: GetViewerQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"],
-    ): Promise<GetUserInformationQuery> {
+    ): Promise<GetViewerQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetUserInformationQuery>(GetUserInformationDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        "GetUserInformation",
+          client.request<GetViewerQuery>(GetViewerDocument, variables, { ...requestHeaders, ...wrappedRequestHeaders }),
+        "GetViewer",
         "query",
       );
     },
-    GetRepositoryLastCommitId(
-      variables: GetRepositoryLastCommitIdQueryVariables,
+    GetRepository(
+      variables: GetRepositoryQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"],
-    ): Promise<GetRepositoryLastCommitIdQuery> {
+    ): Promise<GetRepositoryQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetRepositoryLastCommitIdQuery>(GetRepositoryLastCommitIdDocument, variables, {
+          client.request<GetRepositoryQuery>(GetRepositoryDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        "GetRepositoryLastCommitId",
+        "GetRepository",
         "query",
       );
     },

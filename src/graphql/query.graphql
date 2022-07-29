@@ -1,26 +1,11 @@
-query GetUserInformation($repositoryName: String!) {
+query GetViewer {
     viewer {
         login
         name
-        repository(name: $repositoryName) {
-            nameWithOwner
-            defaultBranchRef {
-                name
-                target {
-                    ... on Commit {
-                        history(first: 30) {
-                            nodes {
-                                message
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
-query GetRepositoryLastCommitId($owner: String!, $name: String!) {
+query GetRepository($owner: String!, $name: String!) {
     repository(owner: $owner, name: $name) {
         defaultBranchRef {
             name
