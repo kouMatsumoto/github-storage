@@ -41,6 +41,7 @@
     "registry": "https://npm.pkg.github.com/@koumatsumoto"
   },
   "dependencies": {
+    "date-fns": "^2.29.1",
     "graphql": "^16.5.0",
     "graphql-request": "^4.3.0",
     "graphql-tag": "^2.12.6",

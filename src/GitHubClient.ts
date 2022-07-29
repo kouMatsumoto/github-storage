@@ -50,4 +50,25 @@ export class GitHubClient {
       lastCommitId: data.repository.defaultBranchRef.target.oid,
     } as const;
   }
+
+  async createCommit(
+    params: {
+      branch: {
+        repositoryNameWithOwner: string;
+        branchName: string;
+      };
+      expectedHeadOid: string;
+      fileChanges: {
+        additions: [{ path: string; contents: string }];
+      };
+      message: {
+        headline: string;
+        body?: string;
+      };
+    },
+  ) {
+    const data = await this.#client.CreateCommit({ input: params });
+
+    return data;
+  }
 }
