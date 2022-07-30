@@ -7,11 +7,11 @@
     "npm": ">= 8.6.0"
   },
   "type": "module",
-  "main": "./dist/github-storage.umd.js",
-  "module": "./dist/github-storage.es.js",
+  "main": "./dist/github-storage.js",
+  "module": "./dist/github-storage.js",
   "exports": {
-    "import": "./dist/github-storage.es.js",
-    "require": "./dist/github-storage.umd.js"
+    "import": "./dist/github-storage.js",
+    "require": "./dist/github-storage.umd.cjs"
   },
   "types": "./types/index.d.ts",
   "files": [
