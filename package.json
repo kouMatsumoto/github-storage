@@ -13,7 +13,7 @@
     "import": "./dist/github-storage.es.js",
     "require": "./dist/github-storage.umd.js"
   },
-  "types": "./types/main.d.ts",
+  "types": "./types/index.d.ts",
   "files": [
     "/dist",
     "/types"
