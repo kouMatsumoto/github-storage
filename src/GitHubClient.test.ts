@@ -13,12 +13,30 @@ describe("GitHubClient", () => {
     });
   });
 
-  test("getRepository", async () => {
-    const data = await client.getRepository({ owner: "koumatsumoto", name: "github-storage" });
+  test("getRepositoryCommits", async () => {
+    const data = await client.getRepositoryCommits({
+      owner: "koumatsumoto",
+      name: "github-storage-test",
+      commitHistoryCount: 2,
+    });
 
     expect(data).toStrictEqual({
       defaultBranchName: expect.any(String),
       lastCommitId: expect.any(String),
+      commits: expect.any(Array),
+    });
+  });
+
+  test("getRepositoryFiles", async () => {
+    const data = await client.getRepositoryFiles({
+      owner: "koumatsumoto",
+      name: "github-storage-test",
+      expression: "main:2022/07/30/1659137075200",
+    });
+
+    expect(data).toStrictEqual({
+      byteSize: 5,
+      text: "hello",
     });
   });
 });

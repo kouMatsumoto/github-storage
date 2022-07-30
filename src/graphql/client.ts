@@ -26844,14 +26844,15 @@ export type GetViewerQuery = {
   viewer: { __typename?: "User"; login: string; name?: string | null };
 };
 
-export type GetRepositoryQueryVariables = Exact<
+export type GetRepositoryCommitsQueryVariables = Exact<
   {
     owner: Scalars["String"];
     name: Scalars["String"];
+    commitHistoryCount: Scalars["Int"];
   }
 >;
 
-export type GetRepositoryQuery = {
+export type GetRepositoryCommitsQuery = {
   __typename?: "Query";
   repository?:
     | {
@@ -26862,34 +26863,18 @@ export type GetRepositoryQuery = {
           name: string;
           target?:
             | { __typename?: "Blob" }
-            | { __typename?: "Commit"; oid: any }
+            | {
+              __typename?: "Commit";
+              oid: any;
+              history: {
+                __typename?: "CommitHistoryConnection";
+                nodes?: Array<{ __typename?: "Commit"; message: string } | null> | null;
+              };
+            }
             | { __typename?: "Tag" }
             | { __typename?: "Tree" }
             | null;
         }
-        | null;
-    }
-    | null;
-};
-
-export type GetFileContentQueryVariables = Exact<
-  {
-    owner: Scalars["String"];
-    name: Scalars["String"];
-    expression: Scalars["String"];
-  }
->;
-
-export type GetFileContentQuery = {
-  __typename?: "Query";
-  repository?:
-    | {
-      __typename?: "Repository";
-      object?:
-        | { __typename?: "Blob"; byteSize: number; text?: string | null }
-        | { __typename?: "Commit" }
-        | { __typename?: "Tag" }
-        | { __typename?: "Tree" }
         | null;
     }
     | null;
@@ -26908,6 +26893,29 @@ export type CreateCommitMutation = {
     | null;
 };
 
+export type GetRepositoryFilesQueryVariables = Exact<
+  {
+    owner: Scalars["String"];
+    name: Scalars["String"];
+    expression: Scalars["String"];
+  }
+>;
+
+export type GetRepositoryFilesQuery = {
+  __typename?: "Query";
+  repository?:
+    | {
+      __typename?: "Repository";
+      object?:
+        | { __typename?: "Blob"; byteSize: number; text?: string | null }
+        | { __typename?: "Commit" }
+        | { __typename?: "Tag" }
+        | { __typename?: "Tree" }
+        | null;
+    }
+    | null;
+};
+
 export const GetViewerDocument = gql`
     query GetViewer {
   viewer {
@@ -26916,27 +26924,20 @@ export const GetViewerDocument = gql`
   }
 }
     `;
-export const GetRepositoryDocument = gql`
-    query GetRepository($owner: String!, $name: String!) {
+export const GetRepositoryCommitsDocument = gql`
+    query GetRepositoryCommits($owner: String!, $name: String!, $commitHistoryCount: Int!) {
   repository(owner: $owner, name: $name) {
     defaultBranchRef {
       name
       target {
         ... on Commit {
           oid
+          history(first: $commitHistoryCount) {
+            nodes {
+              message
+            }
+          }
         }
-      }
-    }
-  }
-}
-    `;
-export const GetFileContentDocument = gql`
-    query GetFileContent($owner: String!, $name: String!, $expression: String!) {
-  repository(owner: $owner, name: $name) {
-    object(expression: $expression) {
-      ... on Blob {
-        byteSize
-        text
       }
     }
   }
@@ -26947,6 +26948,18 @@ export const CreateCommitDocument = gql`
   createCommitOnBranch(input: $input) {
     commit {
       oid
+    }
+  }
+}
+    `;
+export const GetRepositoryFilesDocument = gql`
+    query GetRepositoryFiles($owner: String!, $name: String!, $expression: String!) {
+  repository(owner: $owner, name: $name) {
+    object(expression: $expression) {
+      ... on Blob {
+        byteSize
+        text
+      }
     }
   }
 }
@@ -26973,31 +26986,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         "query",
       );
     },
-    GetRepository(
-      variables: GetRepositoryQueryVariables,
+    GetRepositoryCommits(
+      variables: GetRepositoryCommitsQueryVariables,
       requestHeaders?: Dom.RequestInit["headers"],
-    ): Promise<GetRepositoryQuery> {
+    ): Promise<GetRepositoryCommitsQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<GetRepositoryQuery>(GetRepositoryDocument, variables, {
+          client.request<GetRepositoryCommitsQuery>(GetRepositoryCommitsDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        "GetRepository",
-        "query",
-      );
-    },
-    GetFileContent(
-      variables: GetFileContentQueryVariables,
-      requestHeaders?: Dom.RequestInit["headers"],
-    ): Promise<GetFileContentQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetFileContentQuery>(GetFileContentDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        "GetFileContent",
+        "GetRepositoryCommits",
         "query",
       );
     },
@@ -27013,6 +27012,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
           }),
         "CreateCommit",
         "mutation",
+      );
+    },
+    GetRepositoryFiles(
+      variables: GetRepositoryFilesQueryVariables,
+      requestHeaders?: Dom.RequestInit["headers"],
+    ): Promise<GetRepositoryFilesQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<GetRepositoryFilesQuery>(GetRepositoryFilesDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        "GetRepositoryFiles",
+        "query",
       );
     },
   };

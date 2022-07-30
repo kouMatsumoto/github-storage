@@ -7,6 +7,19 @@ describe("GitHubStorage", () => {
   test("save", async () => {
     const data = await storage.save({ text: "hello" });
 
-    expect(data).toStrictEqual({});
+    expect(data).toStrictEqual({
+      lastCommitId: expect.any(String),
+    });
+  });
+
+  test("load", async () => {
+    const data = await storage.load({ count: 1 });
+
+    expect(data).toStrictEqual([
+      {
+        time: expect.any(String),
+        text: expect.any(String),
+      },
+    ]);
   });
 });

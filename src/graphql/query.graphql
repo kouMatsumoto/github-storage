@@ -5,25 +5,19 @@ query GetViewer {
     }
 }
 
-query GetRepository($owner: String!, $name: String!) {
+query GetRepositoryCommits($owner: String!, $name: String!, $commitHistoryCount: Int!) {
     repository(owner: $owner, name: $name) {
         defaultBranchRef {
             name
             target {
                 ... on Commit {
                     oid
+                    history(first: $commitHistoryCount) {
+                        nodes {
+                            message
+                        }
+                    }
                 }
-            }
-        }
-    }
-}
-
-query GetFileContent($owner: String!, $name: String!, $expression: String!) {
-    repository(owner: $owner, name: $name) {
-        object(expression: $expression) {
-            ... on Blob {
-                byteSize
-                text
             }
         }
     }
@@ -33,6 +27,17 @@ mutation CreateCommit($input: CreateCommitOnBranchInput!) {
     createCommitOnBranch(input: $input) {
         commit {
             oid
+        }
+    }
+}
+
+query GetRepositoryFiles($owner: String!, $name: String!, $expression: String!) {
+    repository(owner: $owner, name: $name) {
+        object(expression: $expression) {
+            ... on Blob {
+                byteSize
+                text
+            }
         }
     }
 }
