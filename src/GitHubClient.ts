@@ -21,13 +21,15 @@ export class GitHubClient {
         viewer: z.object({
           login: z.string().min(1),
           name: z.string().min(1),
+          avatarUrl: z.string().min(1),
         }),
       }).parse,
     );
 
     return {
-      user: data.viewer.login,
+      username: data.viewer.login,
       name: data.viewer.name,
+      avatarUrl: data.viewer.avatarUrl,
     } as const;
   }
 

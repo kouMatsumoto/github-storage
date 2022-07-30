@@ -4,6 +4,16 @@ import { expect, test, describe } from "vitest";
 describe("GitHubStorage", () => {
   const storage = new GitHubStorage({ token: process.env.GITHUB_TOKEN ?? "", repository: "github-storage-test" });
 
+  test("userinfo", async () => {
+    const data = await storage.userinfo();
+
+    expect(data).toStrictEqual({
+      name: "kou",
+      username: "koumatsumoto",
+      avatarUrl: expect.any(String),
+    });
+  });
+
   test("save", async () => {
     const data = await storage.save({ text: "hello" });
 

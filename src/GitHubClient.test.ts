@@ -8,8 +8,9 @@ describe("GitHubClient", () => {
     const data = await client.getViewer();
 
     expect(data).toStrictEqual({
-      user: expect.any(String),
+      username: expect.any(String),
       name: expect.any(String),
+      avatarUrl: expect.any(String),
     });
   });
 

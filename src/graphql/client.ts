@@ -26841,7 +26841,7 @@ export type GetViewerQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetViewerQuery = {
   __typename?: "Query";
-  viewer: { __typename?: "User"; login: string; name?: string | null };
+  viewer: { __typename?: "User"; login: string; name?: string | null; avatarUrl: any };
 };
 
 export type GetRepositoryCommitsQueryVariables = Exact<
@@ -26921,6 +26921,7 @@ export const GetViewerDocument = gql`
   viewer {
     login
     name
+    avatarUrl
   }
 }
     `;

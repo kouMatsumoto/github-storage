@@ -2,18 +2,22 @@ import { format } from "date-fns";
 import { GitHubClient } from "./GitHubClient";
 
 export class GitHubStorage {
-  #client: GitHubClient;
-  #repository: string;
+  readonly #client: GitHubClient;
+  readonly #repository: string;
 
   constructor({ token, repository }: { token: string; repository: string }) {
     this.#client = new GitHubClient({ token });
     this.#repository = repository;
   }
 
+  async userinfo() {
+    return this.#client.getViewer();
+  }
+
   async load({ count }: { count: number }) {
-    const { user } = await this.#client.getViewer();
+    const { username } = await this.#client.getViewer();
     const { defaultBranchName, commits } = await this.#client.getRepositoryCommits({
-      owner: user,
+      owner: username,
       name: this.#repository,
       commitHistoryCount: count,
     });
@@ -21,7 +25,7 @@ export class GitHubStorage {
     return await Promise.all(
       commits.map(async ({ message: filepath }) => {
         const file = await this.#client.getRepositoryFiles({
-          owner: user,
+          owner: username,
           name: this.#repository,
           expression: `${defaultBranchName}:${filepath}`,
         });
@@ -39,9 +43,9 @@ export class GitHubStorage {
   }
 
   async save({ text }: { text: string }) {
-    const { user } = await this.#client.getViewer();
+    const { username } = await this.#client.getViewer();
     const { defaultBranchName, lastCommitId } = await this.#client.getRepositoryCommits({
-      owner: user,
+      owner: username,
       name: this.#repository,
       commitHistoryCount: 0,
     });
@@ -51,7 +55,7 @@ export class GitHubStorage {
     const result = await this.#client.createCommit({
       input: {
         branch: {
-          repositoryNameWithOwner: `${user}/${this.#repository}`,
+          repositoryNameWithOwner: `${username}/${this.#repository}`,
           branchName: defaultBranchName,
         },
         expectedHeadOid: lastCommitId,

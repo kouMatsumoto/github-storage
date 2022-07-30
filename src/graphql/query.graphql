@@ -2,6 +2,7 @@ query GetViewer {
     viewer {
         login
         name
+        avatarUrl
     }
 }
 
