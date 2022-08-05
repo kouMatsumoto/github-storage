@@ -1,5 +1,5 @@
-import { format } from "date-fns";
 import { GitHubClient } from "./GitHubClient";
+import { makeFilePath, toBase64 } from "./utils";
 
 export class GitHubStorage {
   readonly #client: GitHubClient;
@@ -50,7 +50,7 @@ export class GitHubStorage {
       commitHistoryCount: 0,
     });
 
-    const filepath = getFilePath();
+    const filepath = makeFilePath();
 
     const result = await this.#client.createCommit({
       input: {
@@ -71,6 +71,3 @@ export class GitHubStorage {
     return result;
   }
 }
-
-const getFilePath = (time = new Date()) => `${format(time, "yyyy/MM/dd")}/${time.getTime()}`;
-const toBase64 = (text: string) => btoa(unescape(encodeURIComponent(text)));
