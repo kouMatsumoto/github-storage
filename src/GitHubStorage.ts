@@ -72,5 +72,5 @@ export class GitHubStorage {
   }
 }
 
-const getFilePath = (time = new Date()) => format(time, `yyyy/MM/dd/${time.getTime()}`);
+const getFilePath = (time = new Date()) => `${format(time, "yyyy/MM/dd")}/${time.getTime()}`;
 const toBase64 = (text: string) => btoa(unescape(encodeURIComponent(text)));
