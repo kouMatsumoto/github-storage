@@ -25,11 +25,6 @@ describe("GitHubStorage", () => {
   test("load", async () => {
     const data = await storage.load({ count: 1 });
 
-    expect(data).toStrictEqual([
-      {
-        time: expect.any(String),
-        text: expect.any(String),
-      },
-    ]);
+    expect(data).toHaveLength(1);
   });
 });

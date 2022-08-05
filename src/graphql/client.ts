@@ -15444,6 +15444,8 @@ export type ProjectV2Item =
     creator?: Maybe<Actor>;
     /** Identifies the primary key from the database. */
     databaseId?: Maybe<Scalars["Int"]>;
+    /** A specific field value given a field name */
+    fieldValueByName?: Maybe<ProjectV2ItemFieldValue>;
     /** List of field values */
     fieldValues: ProjectV2ItemFieldValueConnection;
     id: Scalars["ID"];
@@ -15456,6 +15458,11 @@ export type ProjectV2Item =
     /** Identifies the date and time when the object was last updated. */
     updatedAt: Scalars["DateTime"];
   };
+
+/** An item within a Project. */
+export type ProjectV2ItemFieldValueByNameArgs = {
+  name: Scalars["String"];
+};
 
 /** An item within a Project. */
 export type ProjectV2ItemFieldValuesArgs = {
@@ -21833,6 +21840,8 @@ export type SecurityAdvisoryConnection = {
 
 /** The possible ecosystems of a security vulnerability's package. */
 export enum SecurityAdvisoryEcosystem {
+  /** GitHub Actions */
+  Actions = "ACTIONS",
   /** PHP packages hosted at packagist.org */
   Composer = "COMPOSER",
   /** Erlang/Elixir packages hosted at hex.pm */
@@ -24180,6 +24189,8 @@ export type TreeEntry = {
   path?: Maybe<Scalars["String"]>;
   /** The Repository the tree entry belongs to */
   repository: Repository;
+  /** Entry byte size */
+  size: Scalars["Int"];
   /** If the TreeEntry is for a directory occupied by a submodule project, this returns the corresponding submodule */
   submodule?: Maybe<Submodule>;
   /** Entry file type. */
