@@ -42,11 +42,16 @@ export class GitHubClient {
             target: z.object({
               oid: z.string().min(1),
               history: z.object({
+                totalCount: z.number(),
                 nodes: z.array(
                   z.object({
                     message: z.string().min(1),
                   }),
                 ),
+                pageInfo: z.object({
+                  endCursor: z.string().min(1),
+                  hasNextPage: z.boolean(),
+                }),
               }),
             }),
           }),
@@ -58,6 +63,9 @@ export class GitHubClient {
       defaultBranchName: data.repository.defaultBranchRef.name,
       lastCommitId: data.repository.defaultBranchRef.target.oid,
       commits: data.repository.defaultBranchRef.target.history.nodes,
+      totalCount: data.repository.defaultBranchRef.target.history.totalCount,
+      endCursor: data.repository.defaultBranchRef.target.history.pageInfo.endCursor,
+      hasNextPage: data.repository.defaultBranchRef.target.history.pageInfo.hasNextPage,
     } as const;
   }
 

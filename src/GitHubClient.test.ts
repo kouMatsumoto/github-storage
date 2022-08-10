@@ -18,13 +18,16 @@ describe("GitHubClient", () => {
     const data = await client.getRepositoryCommits({
       owner: "koumatsumoto",
       name: "github-storage-test",
-      commitHistoryCount: 2,
+      count: 2,
     });
 
     expect(data).toStrictEqual({
       defaultBranchName: expect.any(String),
       lastCommitId: expect.any(String),
       commits: expect.any(Array),
+      totalCount: expect.any(Number),
+      endCursor: expect.any(String),
+      hasNextPage: expect.any(Boolean),
     });
   });
 

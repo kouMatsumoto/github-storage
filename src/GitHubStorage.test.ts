@@ -15,7 +15,7 @@ describe("GitHubStorage", () => {
   });
 
   test("save", async () => {
-    const data = await storage.save({ text: "hello" });
+    const data = await storage.save({ title: "title", text: "hello", tags: ["tag1", "tag2"] });
 
     expect(data).toStrictEqual({
       lastCommitId: expect.any(String),
@@ -26,5 +26,11 @@ describe("GitHubStorage", () => {
     const data = await storage.load({ count: 1 });
 
     expect(data).toHaveLength(1);
+  });
+
+  test("findIndices", async () => {
+    const data = await storage.findIndices({ count: 2 });
+
+    expect(data).toBeInstanceOf(Array);
   });
 });

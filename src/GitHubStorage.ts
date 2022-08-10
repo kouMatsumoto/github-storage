@@ -1,5 +1,6 @@
-import { filter, isDefined } from "remeda";
+import { filter, isDefined, map, pipe, take } from "remeda";
 import { GitHubClient } from "./GitHubClient";
+import { FileIndex } from "./types";
 import {
   makeCommitMessage,
   createFileData,
@@ -9,6 +10,9 @@ import {
   parseFileData,
   FileData,
 } from "./utils";
+
+// @see https://docs.github.com/en/graphql/overview/resource-limitations
+const MAX_NODE_COUNT = 100;
 
 export class GitHubStorage {
   readonly #client: GitHubClient;
@@ -23,12 +27,36 @@ export class GitHubStorage {
     return this.#client.getViewer();
   }
 
+  async findIndices({ count }: { count: number }): Promise<FileIndex[]> {
+    const { username } = await this.#client.getViewer();
+
+    const results: string[] = [];
+    let endCursor: string | undefined = undefined;
+    let hasNextPage = true;
+    while (hasNextPage && results.length < count) {
+      const result: Awaited<ReturnType<GitHubClient["getRepositoryCommits"]>> = await this.#client.getRepositoryCommits(
+        {
+          owner: username,
+          name: this.#repository,
+          count: MAX_NODE_COUNT,
+          after: endCursor,
+        },
+      );
+
+      endCursor = result.endCursor;
+      hasNextPage = result.hasNextPage;
+      results.push(...result.commits.map(({ message }) => message));
+    }
+
+    return pipe(results, take(count), map(parseCommitMessage));
+  }
+
   async load({ count }: { count: number }): Promise<FileData[]> {
     const { username } = await this.#client.getViewer();
     const { defaultBranchName, commits } = await this.#client.getRepositoryCommits({
       owner: username,
       name: this.#repository,
-      commitHistoryCount: count,
+      count,
     });
 
     const records = await Promise.all(
@@ -71,14 +99,14 @@ export class GitHubStorage {
     const { defaultBranchName, lastCommitId } = await this.#client.getRepositoryCommits({
       owner: username,
       name: this.#repository,
-      commitHistoryCount: 0,
+      count: 1,
     });
 
     const filepath = getFilePath(time);
     const filedata = createFileData({ time, title, text, tags });
     const commitMessage = makeCommitMessage({ time, title, tags });
 
-    const result = await this.#client.createCommit({
+    return await this.#client.createCommit({
       input: {
         branch: {
           repositoryNameWithOwner: `${username}/${this.#repository}`,
@@ -93,7 +121,5 @@ export class GitHubStorage {
         },
       },
     });
-
-    return result;
   }
 }
