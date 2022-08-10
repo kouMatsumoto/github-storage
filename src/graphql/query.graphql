@@ -6,6 +6,14 @@ query GetViewer {
     }
 }
 
+query GetRepositoryDefaultBranch($owner: String!, $name: String!) {
+    repository(owner: $owner, name: $name) {
+        defaultBranchRef {
+            name
+        }
+    }
+}
+
 query GetRepositoryCommits($owner: String!, $name: String!, $count: Int!, $after: String) {
     repository(owner: $owner, name: $name) {
         defaultBranchRef {
@@ -37,7 +45,7 @@ mutation CreateCommit($input: CreateCommitOnBranchInput!) {
     }
 }
 
-query GetRepositoryFiles($owner: String!, $name: String!, $expression: String!) {
+query GetRepositoryFile($owner: String!, $name: String!, $expression: String!) {
     repository(owner: $owner, name: $name) {
         object(expression: $expression) {
             ... on Blob {

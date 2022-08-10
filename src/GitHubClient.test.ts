@@ -14,6 +14,12 @@ describe("GitHubClient", () => {
     });
   });
 
+  test("getRepositoryDefaultBranch", async () => {
+    const data = await client.getRepositoryDefaultBranch({ owner: "koumatsumoto", name: "github-storage-test" });
+
+    expect(data).toStrictEqual("main");
+  });
+
   test("getRepositoryCommits", async () => {
     const data = await client.getRepositoryCommits({
       owner: "koumatsumoto",
@@ -31,8 +37,8 @@ describe("GitHubClient", () => {
     });
   });
 
-  test("getRepositoryFiles", async () => {
-    const data = await client.getRepositoryFiles({
+  test("getRepositoryFile", async () => {
+    const data = await client.getRepositoryFile({
       owner: "koumatsumoto",
       name: "github-storage-test",
       expression: "main:2022/07/30/1659137075200",

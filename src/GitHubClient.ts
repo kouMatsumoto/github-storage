@@ -33,6 +33,20 @@ export class GitHubClient {
     } as const;
   }
 
+  async getRepositoryDefaultBranch(params: Params<"GetRepositoryDefaultBranch">) {
+    const data = await this.#client.GetRepositoryDefaultBranch(params).then(
+      z.object({
+        repository: z.object({
+          defaultBranchRef: z.object({
+            name: z.string().min(1),
+          }),
+        }),
+      }).parse,
+    );
+
+    return data.repository.defaultBranchRef.name;
+  }
+
   async getRepositoryCommits(params: Params<"GetRepositoryCommits">) {
     const data = await this.#client.GetRepositoryCommits(params).then(
       z.object({
@@ -69,8 +83,8 @@ export class GitHubClient {
     } as const;
   }
 
-  async getRepositoryFiles(params: Params<"GetRepositoryFiles">) {
-    const data = await this.#client.GetRepositoryFiles(params).then(
+  async getRepositoryFile(params: Params<"GetRepositoryFile">) {
+    const data = await this.#client.GetRepositoryFile(params).then(
       z.object({
         repository: z.object({
           object: z.object({

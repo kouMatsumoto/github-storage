@@ -28,6 +28,17 @@ describe("GitHubStorage", () => {
     expect(data).toHaveLength(1);
   });
 
+  test("loadFile", async () => {
+    const data = await storage.loadFile(1660137981949);
+
+    expect(data).toStrictEqual({
+      time: 1660137981949,
+      title: "title",
+      text: "hello",
+      tags: ["tag1", "tag2"],
+    });
+  });
+
   test("findIndices", async () => {
     const data = await storage.findIndices({ count: 2 });
 

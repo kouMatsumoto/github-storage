@@ -27,6 +27,12 @@ export class GitHubStorage {
     return this.#client.getViewer();
   }
 
+  async defaultBranch() {
+    const { username } = await this.#client.getViewer();
+
+    return this.#client.getRepositoryDefaultBranch({ owner: username, name: this.#repository });
+  }
+
   async findIndices({ count }: { count: number }): Promise<FileIndex[]> {
     const { username } = await this.#client.getViewer();
 
@@ -51,6 +57,30 @@ export class GitHubStorage {
     return pipe(results, take(count), map(parseCommitMessage));
   }
 
+  async loadFile(id: number) {
+    const { username } = await this.#client.getViewer();
+    const filepath = getFilePath(id);
+    const defaultBranchName = await this.defaultBranch();
+
+    const file = await this.#client.getRepositoryFile({
+      owner: username,
+      name: this.#repository,
+      expression: `${defaultBranchName}:${filepath}`,
+    });
+
+    if (!file) {
+      console.error(`[github-storage] file not found: ${filepath}`);
+      return undefined;
+    }
+
+    try {
+      return parseFileData(file.text);
+    } catch {
+      console.error(`[github-storage] data is not json schema: ${file.text}`);
+      return undefined;
+    }
+  }
+
   async load({ count }: { count: number }): Promise<FileData[]> {
     const { username } = await this.#client.getViewer();
     const { defaultBranchName, commits } = await this.#client.getRepositoryCommits({
@@ -64,7 +94,7 @@ export class GitHubStorage {
         const { time } = parseCommitMessage(message);
         const filepath = getFilePath(time);
 
-        const file = await this.#client.getRepositoryFiles({
+        const file = await this.#client.getRepositoryFile({
           owner: username,
           name: this.#repository,
           expression: `${defaultBranchName}:${filepath}`,
