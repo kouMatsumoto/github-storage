@@ -44,7 +44,7 @@ export class GitHubStorage {
         {
           owner: username,
           name: this.#repository,
-          count: MAX_NODE_COUNT,
+          count: Math.min(MAX_NODE_COUNT, count),
           after: endCursor,
         },
       );
