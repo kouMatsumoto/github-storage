@@ -23,7 +23,7 @@
     "format": "prettier . '!graphql.schema.json' --write --ignore-path .gitignore",
     "lint": "prettier . '!graphql.schema.json' --check --ignore-path .gitignore",
     "test": "vitest run",
-    "prepare": "husky install",
+    "prepare": "husky install || true",
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "repository": {
@@ -36,9 +36,6 @@
   "homepage": "https://github.com/kouMatsumoto/github-storage#readme",
   "bugs": {
     "url": "https://github.com/kouMatsumoto/github-storage/issues"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@koumatsumoto"
   },
   "dependencies": {
     "date-fns": "^2.30.0",
