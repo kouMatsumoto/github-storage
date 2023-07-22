@@ -1,5 +1,5 @@
 export type FileIndex = {
-  time: number;
-  title: string;
-  tags: string[];
+	time: number;
+	title: string;
+	tags: string[];
 };

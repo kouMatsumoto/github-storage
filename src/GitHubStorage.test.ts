@@ -2,46 +2,53 @@ import { GitHubStorage } from "./GitHubStorage";
 import { expect, test, describe } from "vitest";
 
 describe("GitHubStorage", () => {
-  const storage = new GitHubStorage({ token: process.env.GITHUB_TOKEN ?? "", repository: "github-storage-test" });
+	const storage = new GitHubStorage({
+		token: process.env.GITHUB_TOKEN ?? "",
+		repository: "github-storage-test",
+	});
 
-  test("userinfo", async () => {
-    const data = await storage.userinfo();
+	test("userinfo", async () => {
+		const data = await storage.userinfo();
 
-    expect(data).toStrictEqual({
-      name: "kou",
-      username: "koumatsumoto",
-      avatarUrl: expect.any(String),
-    });
-  });
+		expect(data).toStrictEqual({
+			name: "kou",
+			username: "koumatsumoto",
+			avatarUrl: expect.any(String),
+		});
+	});
 
-  test("save", async () => {
-    const data = await storage.save({ title: "title", text: "hello", tags: ["tag1", "tag2"] });
+	test("save", async () => {
+		const data = await storage.save({
+			title: "title",
+			text: "hello",
+			tags: ["tag1", "tag2"],
+		});
 
-    expect(data).toStrictEqual({
-      lastCommitId: expect.any(String),
-    });
-  });
+		expect(data).toStrictEqual({
+			lastCommitId: expect.any(String),
+		});
+	});
 
-  test("load", async () => {
-    const data = await storage.load({ count: 1 });
+	test("load", async () => {
+		const data = await storage.load({ count: 1 });
 
-    expect(data).toHaveLength(1);
-  });
+		expect(data).toHaveLength(1);
+	});
 
-  test("loadFile", async () => {
-    const data = await storage.loadFile(1660137981949);
+	test("loadFile", async () => {
+		const data = await storage.loadFile(1660137981949);
 
-    expect(data).toStrictEqual({
-      time: 1660137981949,
-      title: "title",
-      text: "hello",
-      tags: ["tag1", "tag2"],
-    });
-  });
+		expect(data).toStrictEqual({
+			time: 1660137981949,
+			title: "title",
+			text: "hello",
+			tags: ["tag1", "tag2"],
+		});
+	});
 
-  test("findIndices", async () => {
-    const data = await storage.findIndices({ count: 2 });
+	test("findIndices", async () => {
+		const data = await storage.findIndices({ count: 2 });
 
-    expect(data).toBeInstanceOf(Array);
-  });
+		expect(data).toBeInstanceOf(Array);
+	});
 });
