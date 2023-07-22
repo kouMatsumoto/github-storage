@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: 18
           cache: npm
-      - run: npm ci # FIXME: should use --ignore-scripts option but rome@0.7.0 requires post install script currently
+      - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm run build
 

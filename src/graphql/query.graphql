@@ -1,57 +1,57 @@
 query GetViewer {
-    viewer {
-        login
-        name
-        avatarUrl
-    }
+  viewer {
+    login
+    name
+    avatarUrl
+  }
 }
 
 query GetRepositoryDefaultBranch($owner: String!, $name: String!) {
-    repository(owner: $owner, name: $name) {
-        defaultBranchRef {
-            name
-        }
+  repository(owner: $owner, name: $name) {
+    defaultBranchRef {
+      name
     }
+  }
 }
 
 query GetRepositoryCommits($owner: String!, $name: String!, $count: Int!, $after: String) {
-    repository(owner: $owner, name: $name) {
-        defaultBranchRef {
-            name
-            target {
-                ... on Commit {
-                    oid
-                    history(first: $count, after: $after) {
-                        totalCount
-                        nodes {
-                            message
-                        }
-                        pageInfo {
-                            endCursor
-                            hasNextPage
-                        }
-                    }
-                }
+  repository(owner: $owner, name: $name) {
+    defaultBranchRef {
+      name
+      target {
+        ... on Commit {
+          oid
+          history(first: $count, after: $after) {
+            totalCount
+            nodes {
+              message
             }
+            pageInfo {
+              endCursor
+              hasNextPage
+            }
+          }
         }
+      }
     }
+  }
 }
 
 mutation CreateCommit($input: CreateCommitOnBranchInput!) {
-    createCommitOnBranch(input: $input) {
-        commit {
-            oid
-        }
+  createCommitOnBranch(input: $input) {
+    commit {
+      oid
     }
+  }
 }
 
 query GetRepositoryFile($owner: String!, $name: String!, $expression: String!) {
-    repository(owner: $owner, name: $name) {
-        object(expression: $expression) {
-            ... on Blob {
-                byteSize
-                text
-            }
-        }
+  repository(owner: $owner, name: $name) {
+    object(expression: $expression) {
+      ... on Blob {
+        byteSize
+        text
+      }
     }
+  }
 }
